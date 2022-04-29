@@ -11,6 +11,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 const useStyles = makeStyles((theme) =>({
           container:{
              position:"sticky",
@@ -52,6 +53,7 @@ const Leftbar = () => {
    const classes = useStyles();
    const history = useHistory();
    const [id, setId] = useState(false);
+   const [userid,setUserid] =useState();
    const [anchorEl, setAnchorEl] = React.useState(null);
 
    const handleRoute = (result) =>{
@@ -71,7 +73,15 @@ const Leftbar = () => {
       window.location.reload(false);
 
     };
+       const handleProfile = (account) => {
+      
+      
+            let name = "profile"
+      
+      history.push('/'+name+"/"+account);
+      
 
+    };
   useEffect(async(e) => {
      
     let config = {
@@ -89,7 +99,7 @@ const Leftbar = () => {
        
         const auth = await axios.get(host+"/api/auth",config);
         console.log(auth)
-
+            setUserid(auth.data._id);
             if(auth.data.email == "admin@gmail.com"){
                
                 setId(true);
@@ -122,6 +132,14 @@ const Leftbar = () => {
              <Typography className={classes.text} onClick={()=> homeRoute("/")}>Homepage</Typography>
                        
           </div>
+
+            <div className={classes.item}>
+
+             
+             <AccountCircleIcon className={classes.icon} onClick={()=> handleRoute("myposts")}/>
+             <Typography className={classes.text} onClick={()=>handleProfile(userid)}>My Profile</Typography>
+                       
+          </div>          
                     <div className={classes.item}>
 
              

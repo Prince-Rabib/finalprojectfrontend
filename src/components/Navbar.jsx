@@ -10,6 +10,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import image from '../shownow.png';
 import {host} from '../host';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import MovieFilterIcon from '@material-ui/icons/MovieFilter';
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 
 const useStyles = makeStyles((theme) =>({
         Toolbar:{
@@ -113,6 +116,16 @@ const Navbar = () => {
 
     };
 
+       const handleRouteof = (account) => {
+      
+      
+            
+      
+      history.push("/"+account);
+      
+
+    };
+
  useEffect(async(e) => {
      
     let config = {
@@ -157,13 +170,23 @@ const Navbar = () => {
             <Badge color="secondary" className={classes.badge} onClick={()=>handleProfile(id._id)}>
              <AccountCircleIcon/>               
              </Badge >
+            <Badge color="secondary" className={classes.badge} onClick={()=>handleRouteof('search')}>
+             <EmojiPeopleIcon onClick={()=>handleRouteof('search')}/>             
+             </Badge >
+            <Badge color="secondary" className={classes.badge} onClick={()=>handleRouteof('myposts')}>
+             <AllInboxIcon onClick={()=>handleRouteof('myposts')}/>             
+             </Badge >             
+            <Badge color="secondary" className={classes.badge} onClick={()=>handleRouteof('findposts')}>
+             <MovieFilterIcon onClick={()=>handleRouteof('findposts')}/>             
+             </Badge >
+
+             <Logout/> 
                
-      <Logout/>
                
              </div>) :
              (<div className={classes.icons} >
 
-                 <Logout/> 
+                 
             </div>)
 
    )
@@ -174,9 +197,6 @@ const Navbar = () => {
              <Typography variant="h4" className={classes.logoLg} onClick={()=>handleRoute("/")}>
                  <img src={image} alt=""  style={{width:200}} className={classes.logo} />
              </Typography>
-             <div className={classes.search}>
-
-             </div>
 
               {profile}
 

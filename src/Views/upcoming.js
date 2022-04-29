@@ -5,9 +5,10 @@ import Leftbar from "../components/Leftbar";
 import Navbar from "../components/Navbar";
 import Rightbar from "../components/Rightbar";
 import { Link } from "react-router-dom";
-import Searchtmdb from "../components/search/Searchtmdb";
-import Toprattedmovie from "../components/toprattedmovie"
-
+import Tmdb from "../components/Tmdb";
+import { withRouter } from "react-router-dom";
+import Toprattertv from '../components/toprattedtv'
+import Upcoming from '../components/upcoming'
 const useStyles = makeStyles((theme) =>({
       right:{
           [theme.breakpoints.down("sm")]:{
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) =>({
 
 }))
 
-const Search = () => {
+const Trending = () => {
    const classes = useStyles();
 
    return (
@@ -34,10 +35,10 @@ const Search = () => {
            <Leftbar/>
            </Grid>
            <Grid item sm={7} xs={10} className={classes.up}>
-              <Searchtmdb/>
+              <Upcoming/>
            </Grid>
            <Grid item sm={3} className={classes.right}>
-            <Rightbar/>  
+            <Toprattertv/>  
            </Grid>
         </Grid>
         <Add/>
@@ -45,4 +46,4 @@ const Search = () => {
    )
 };
 
-export default Search;
+export default withRouter(Trending);

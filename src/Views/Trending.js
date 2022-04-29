@@ -7,7 +7,7 @@ import Rightbar from "../components/Rightbar";
 import { Link } from "react-router-dom";
 import Tmdb from "../components/Tmdb";
 import { withRouter } from "react-router-dom";
-
+import Toprattertv from '../components/toprattedtv'
 const useStyles = makeStyles((theme) =>({
       right:{
           [theme.breakpoints.down("sm")]:{
@@ -37,7 +37,7 @@ const Trending = () => {
               <Tmdb/>
            </Grid>
            <Grid item sm={3} className={classes.right}>
-            <Rightbar/>  
+            <Toprattertv/>  
            </Grid>
         </Grid>
         <Add/>

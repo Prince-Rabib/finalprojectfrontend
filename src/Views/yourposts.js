@@ -3,10 +3,10 @@ import { Add } from "@material-ui/icons";
 import Feed from "../components/feed";
 import Leftbar from "../components/Leftbar";
 import Navbar from "../components/Navbar";
-import Rightbar from "../components/Rightbar";
+import Mediatv from "../components/mediaTv";
 import { Link } from "react-router-dom";
 import Searchtmdb from "../components/search/Searchtmdb";
-import Toprattedmovie from "../components/toprattedmovie"
+import Mypost from "../components/post/myposts"
 
 const useStyles = makeStyles((theme) =>({
       right:{
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) =>({
 
 }))
 
-const Search = () => {
+const Yourpost = () => {
    const classes = useStyles();
 
    return (
@@ -34,10 +34,10 @@ const Search = () => {
            <Leftbar/>
            </Grid>
            <Grid item sm={7} xs={10} className={classes.up}>
-              <Searchtmdb/>
+              <Mypost/>
            </Grid>
            <Grid item sm={3} className={classes.right}>
-            <Rightbar/>  
+            <Mediatv/>  
            </Grid>
         </Grid>
         <Add/>
@@ -45,4 +45,4 @@ const Search = () => {
    )
 };
 
-export default Search;
+export default Yourpost;

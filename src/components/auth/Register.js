@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) =>({
         height:'100%',
         display:'flex',
         flexDirection: 'column',
-        textAlign:'center',        
+        textAlign:'center',
+         backgroundImage:`url(${"https://lh5.googleusercontent.com/oDUgUwudwBlIQ3WSyBE3gZ58_tqhKTDBkic65snFp2x5ZKamuzmyfG-WqYI8AC5vl1iu4RAZhW7JdwnCdyW0lA5RNyCbA5XjW6dBVcHw1hPbYZ1yGX82YIH2pWi4JdgFY38VPPd4"})`,        
      },
      snackbar:{
         width: '100%',
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) =>({
       },
       paperStyle:{
         padding :20,
-        height:'70vh',
+        height:'85vh',
         width:500, 
         margin:"20px auto",
   

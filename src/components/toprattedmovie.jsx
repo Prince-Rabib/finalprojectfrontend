@@ -1,4 +1,3 @@
-
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Card, Container, makeStyles,CardActions, CardActionArea, CardMedia, CardContent, Typography,Button,Grid } from "@material-ui/core";
@@ -46,9 +45,9 @@ const useStyles = makeStyles((theme) =>({
     
 
 
-const MediaRight = () => {
+const MediaTv = () => {
 
-   const baseUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=c92ecd56753067461e71f400f32022cf&language=en-US"
+   const baseUrl = "https://api.themoviedb.org/3/movie/top_rated?api_key=c92ecd56753067461e71f400f32022cf&language=en-US"
    const classes = useStyles();
    const [trend, setTrend] = useState([]);
 
@@ -89,7 +88,7 @@ const MediaRight = () => {
                <PlayCircleOutlineIcon/>
             </div>
             <div>
-                <Typography gutterBottom variant="h5" >Now Playing</Typography>
+                <Typography gutterBottom variant="h5" >Top Ratted Movies</Typography>
             </div>
         
         </div>
@@ -118,4 +117,4 @@ const MediaRight = () => {
     </>
   )
 }
-export default MediaRight;
+export default MediaTv;

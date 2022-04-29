@@ -21,7 +21,9 @@ import Admin from "./components/admin/Admin";
 import AdminPanel from "./Views/Adminpanel";
 import Adminpost from "./Views/adminpost";
 import {host} from './host';
-
+import Yourpost from "./Views/yourposts";
+import FindPost from "./Views/findposts";
+import Upcoming from "./Views/upcoming"
 
 const App = () => {
 
@@ -69,12 +71,15 @@ const App = () => {
          <ProtectedRoute path="/about" exact component={About}/>
          <ProtectedRoute exact path="/trending" component={Trending} />
          <ProtectedRoute path="/search" exact component={Search}/>
-         <ProtectedRoute path="/database" exact component={Databasesearch} />
+         <ProtectedRoute path="/moviestvshows" exact component={Databasesearch} />
          <ProtectedRoute path="/details/:id/:type" component={Detailpage}/>
          <ProtectedRoute path="/profile/:id" component={Profilepage}/>
          <ProtectedRoute path="/profiles/:id" component={Profilepages}/>
          <ProtectedRoute path="/adminpanel"  component={AdminPanel}/>               
-         <ProtectedRoute path="/adminpost"  component={Adminpost}/>     
+         <ProtectedRoute path="/adminpost"  component={Adminpost}/>
+         <ProtectedRoute path="/myposts"  component={Yourpost}/>    
+         <ProtectedRoute path="/findposts"  component={FindPost}/>
+         <ProtectedRoute path="/upcoming"  component={Upcoming}/>          
          </Switch>  
         </Router>
         

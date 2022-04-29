@@ -71,7 +71,7 @@ export default function Details() {
                 </CardActionArea>
                 <CardActions>
                     <Button size="small" color="Primary">{details.status}</Button>
-                    <Button size="small" color="Primary">Share</Button>
+                    <Button size="small" color="Primary">{details.release_date}</Button>
                 </CardActions>
             </Card>
             

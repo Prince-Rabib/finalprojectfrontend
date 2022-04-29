@@ -12,12 +12,14 @@ import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Dialog from '@material-ui/core/Dialog';
 import { DetailsOutlined } from "@material-ui/icons";
-import image from '../imagepost.png';
+import image from '../../imagepost.png';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {host} from '../host';
+import {host} from '../../host';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import DayJS from 'react-dayjs';
 import moment from "moment";
 
 const useStyles = makeStyles((theme) =>({
@@ -25,6 +27,7 @@ const useStyles = makeStyles((theme) =>({
         
         marginTop:theme.spacing(2),
         height:'100%',
+        maxWidth:'100%',
         display:'flex',
         flexDirection: 'column'
         
@@ -155,6 +158,20 @@ const useStyles = makeStyles((theme) =>({
       postMargin:{
         marginTop:theme.spacing(2)
       },
+      deleteButton:{
+          display:'flex',
+          justifyContent:'flex-end'
+      },
+      mypost:{
+        textAlign:'center'
+      },
+      icon:{
+        marginLeft:theme.spacing(1),
+        
+      },
+      preview:{
+        marginTop:theme.spacing(7)
+      },
        date:{
         minWidth: '92%',
         textAlign:"right",
@@ -170,9 +187,10 @@ const useStyles = makeStyles((theme) =>({
       exatTime:{
         marginLeft:theme.spacing(0.5)
       },
-            commentdate:{
+      commentdate:{
         marginLeft:theme.spacing(2)
       }
+
 }))
 
 const Post = () => {
@@ -286,9 +304,8 @@ const Post = () => {
         }
    }
 
-   useEffect(async(e) => {
-     getrequest();
-    let config = {
+    const getData = async()=>{
+              let config = {
         headers:{
             "content-Type":"application/json"
         }
@@ -300,12 +317,14 @@ const Post = () => {
                 "x-auth-token": localStorage.getItem("authToken")
             }
         }
-        const data = await axios.get(host+"/api/posts",config);
+
         const auth = await axios.get(host+"/api/auth",config);
         
 
-        console.log(data)
-        if(data.data){
+        if(auth){
+            const data = await axios.post(host+"/api/posts/mypost",{
+                'id':auth.data._id
+            },config);
             setName(auth.data.name);
             setPostData(data.data)
         }
@@ -314,6 +333,10 @@ const Post = () => {
      
         history.push('/login')
     }
+    }
+   useEffect(async(e) => {
+     getrequest();
+     getData();
   
    },[change,search])
     
@@ -329,6 +352,8 @@ const Post = () => {
     const onComments = (e)=>{
         Comment = e.target.value
     }
+
+
    let count = 0;
    //////////////////////////////////////////////////////////////////////
   const [open, setOpen] = React.useState(false);
@@ -341,6 +366,7 @@ const Post = () => {
 
   const handleClose = () => {
     setOpen(false);
+
   };
 
   const descriptionElementRef = React.useRef(null);
@@ -415,6 +441,29 @@ const Post = () => {
 
          }
 
+         const deletePost = async(id)=>{
+                try {
+        
+        const config = {
+            headers:{
+                "content-Type":"application/json",
+                "x-auth-token": localStorage.getItem("authToken")
+            }
+        }
+            
+            let data = await axios.delete(host+"/api/posts/"+[id],config);
+            if(data.data){
+             getData();
+            }
+            
+            } catch(error) {
+
+            const err = error.response.data
+
+            
+             }
+         }
+
 
 
 
@@ -436,7 +485,7 @@ const Post = () => {
   const card = (
 
        (Details.length == 0)?
-           (<Card onClick={handleClickOpen('paper')}>
+           (<Card className={classes.preview} onClick={handleClickOpen('paper')}>
       <CardActionArea>
         
         <CardMedia
@@ -451,7 +500,7 @@ const Post = () => {
       </CardActionArea>
 
     </Card>):(
-      <Card onClick={handleClickOpen('paper')}>
+      <Card className={classes.preview} onClick={handleClickOpen('paper')}>
       <CardActionArea>
         
         <CardMedia
@@ -567,14 +616,16 @@ const Post = () => {
          </div>
         </form>
        
-        
-       <Grid container spacing={2}>
+        <Typography variant="h5" className={classes.mypost}>My Posts<PostAddIcon className={classes.icon}/></Typography>
+        <Grid container spacing={2}>
            {postData.slice().reverse().map(result => {
                return ( 
+             
             <Grid key={result._id} item md={12} xs={12} sm={6}>
                 <Card className={classes.container}>
+                  <Button variant="contained" color="secondary" onClick={()=>deletePost(result._id)}>Delete Post</Button>
                    <CardActionArea>                      
-                     <CardContent >
+                     <CardContent>
                   <div className={classes.time}>
                        <div >
                             <h5 className={classes.exatTime}>{moment(result.date).fromNow()}</h5>
@@ -629,7 +680,6 @@ const Post = () => {
                                 <ListItem alignItems="flex-start">
                                   <ListItemAvatar>
                                     <Avatar className={classes.purple} alt={comments.name} src="/static/images/avatar/1.jpg" />
-            
                                   </ListItemAvatar>
                                   <ListItemText
                                     primary={ 

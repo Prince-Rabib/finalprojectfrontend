@@ -7,6 +7,10 @@ import PeopleIcon from '@material-ui/icons/People';
 import MovieIcon from '@material-ui/icons/Movie';
 import PermDeviceInformationIcon from '@material-ui/icons/PermDeviceInformation';
 import {host} from '../host';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import NewReleasesIcon from '@material-ui/icons/NewReleases';
 const useStyles = makeStyles((theme) =>({
           container:{
              position:"sticky",
@@ -48,6 +52,7 @@ const Leftbar = () => {
    const classes = useStyles();
    const history = useHistory();
    const [id, setId] = useState(false);
+   const [anchorEl, setAnchorEl] = React.useState(null);
 
    const handleRoute = (result) =>{
       
@@ -57,6 +62,15 @@ const Leftbar = () => {
       
         history.push('/')
    }
+
+       const handleClose = () => {
+      
+      localStorage.removeItem("authToken");
+      history.push('/login');
+      setAnchorEl(null);
+      window.location.reload(false);
+
+    };
 
   useEffect(async(e) => {
      
@@ -108,20 +122,44 @@ const Leftbar = () => {
              <Typography className={classes.text} onClick={()=> homeRoute("/")}>Homepage</Typography>
                        
           </div>
+                    <div className={classes.item}>
+
+             
+             <PostAddIcon className={classes.icon} onClick={()=> handleRoute("myposts")}/>
+             <Typography className={classes.text} onClick={()=> handleRoute("myposts")}>My Posts</Typography>
+                       
+          </div>
+                              <div className={classes.item}>
+
+             
+             <FindInPageIcon className={classes.icon} onClick={()=> handleRoute("findposts")}/>
+             <Typography className={classes.text} onClick={()=> handleRoute("findposts")}>Find Posts</Typography>
+                       
+          </div>
+           <div className={classes.item}>
+             <PeopleIcon className={classes.icon} onClick={()=> handleRoute("search")}/>
+             <Typography className={classes.text} onClick={()=> handleRoute("search")}>Friends</Typography>            
+          </div>         
           <div className={classes.item}>
              <MovieIcon className={classes.icon} onClick={()=> handleRoute("trending")} />
              <Typography className={classes.text} onClick={()=> handleRoute("trending")}>Latest Movies & TV Shows</Typography>            
           </div>
 
           <div className={classes.item}>
-             <PlayCircleOutline className={classes.icon} onClick={()=> handleRoute("database")}/>
-             <Typography className={classes.text} onClick={()=> handleRoute("database")}>Search Movies & TV Shows</Typography>            
+             <PlayCircleOutline className={classes.icon} onClick={()=> handleRoute("moviestvshows")}/>
+             <Typography className={classes.text} onClick={()=> handleRoute("moviestvshows")}>Search Movies & TV Shows</Typography>            
+          </div>
+
+
+          <div className={classes.item}>
+             <NewReleasesIcon className={classes.icon} onClick={()=> handleRoute("upcoming")}/>
+             <Typography className={classes.text} onClick={()=> handleRoute("upcoming")}>Upcoming Movies</Typography>            
           </div>
           <div className={classes.item}>
-             <PeopleIcon className={classes.icon} onClick={()=> handleRoute("search")}/>
-             <Typography className={classes.text} onClick={()=> handleRoute("search")}>Friends</Typography>            
+             <ExitToAppIcon className={classes.icon} onClick={()=> handleClose()}/>
+             <Typography className={classes.text} onClick={()=> handleClose()}>Log Out</Typography>            
           </div>
-           
+          
           {adminPanel}
        </Container>
    )

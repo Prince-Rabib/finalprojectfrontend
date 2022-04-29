@@ -1,4 +1,3 @@
-
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { Card, Container, makeStyles,CardActions, CardActionArea, CardMedia, CardContent, Typography,Button,Grid } from "@material-ui/core";
@@ -46,9 +45,9 @@ const useStyles = makeStyles((theme) =>({
     
 
 
-const MediaRight = () => {
+const MediaTv = () => {
 
-   const baseUrl = "https://api.themoviedb.org/3/movie/now_playing?api_key=c92ecd56753067461e71f400f32022cf&language=en-US"
+   const baseUrl = "https://api.themoviedb.org/3/tv/top_rated?api_key=c92ecd56753067461e71f400f32022cf&language=en-US"
    const classes = useStyles();
    const [trend, setTrend] = useState([]);
 
@@ -89,23 +88,23 @@ const MediaRight = () => {
                <PlayCircleOutlineIcon/>
             </div>
             <div>
-                <Typography gutterBottom variant="h5" >Now Playing</Typography>
+                <Typography gutterBottom variant="h5" >Top Ratted TV Shows</Typography>
             </div>
         
         </div>
         {(loading)? <h1 className={classes.setup}>  </h1> :trend.map(result => {
             return ( <Grid item md={12} xs={12} sm={12}>
-            <Card className={classes.container} onClick={()=> handleRoute((result.id),("movie"))}>
+            <Card className={classes.container} onClick={()=> handleRoute((result.id),("tv"))}>
                 <CardActionArea className={classes.poster}>
                     <CardMedia className={classes.media}
                     style={{height:10,width:100}}
                     image={"https://image.tmdb.org/t/p/original"+result.poster_path}
-                    title = {result.original_title}
+                    title = {result.original_name}
                      />                                  
                 </CardActionArea>
                 <CardActionArea >                   
                   <CardContent className={classes.numberoflines}>
-                      <Typography gutterBottom variant="h6">{result.original_title}</Typography>
+                      <Typography gutterBottom variant="h6">{result.original_name}</Typography>
                   </CardContent>              
                 </CardActionArea>
             </Card>
@@ -118,4 +117,4 @@ const MediaRight = () => {
     </>
   )
 }
-export default MediaRight;
+export default MediaTv;

@@ -12,19 +12,28 @@ import { deepOrange, deepPurple } from '@material-ui/core/colors';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Dialog from '@material-ui/core/Dialog';
 import { DetailsOutlined } from "@material-ui/icons";
-import image from '../imagepost.png';
+import image from '../../imagepost.png';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {host} from '../host';
+import {host} from '../../host';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import DayJS from 'react-dayjs';
 import moment from "moment";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 const useStyles = makeStyles((theme) =>({
     container:{
         
         marginTop:theme.spacing(2),
         height:'100%',
+        maxWidth:'100%',
         display:'flex',
         flexDirection: 'column'
         
@@ -38,9 +47,10 @@ const useStyles = makeStyles((theme) =>({
      },
      Button:{
          marginTop:theme.spacing(2),
+         maxWidth:'100%',
          display:'flex',
          flexDirection: 'row',
-         justifyContent:'right'
+         justifyContent:'center'
      },
      avatar:{
          display:'flex',
@@ -155,6 +165,20 @@ const useStyles = makeStyles((theme) =>({
       postMargin:{
         marginTop:theme.spacing(2)
       },
+      deleteButton:{
+          display:'flex',
+          justifyContent:'flex-end'
+      },
+      mypost:{
+        textAlign:'center'
+      },
+      icon:{
+        marginLeft:theme.spacing(1),
+        
+      },
+      preview:{
+        marginTop:theme.spacing(7)
+      },
        date:{
         minWidth: '92%',
         textAlign:"right",
@@ -170,12 +194,22 @@ const useStyles = makeStyles((theme) =>({
       exatTime:{
         marginLeft:theme.spacing(0.5)
       },
-            commentdate:{
+      commentdate:{
         marginLeft:theme.spacing(2)
-      }
+      },
+      buttonwidth:{
+          maxWidth:'100%'
+      },
+        rootup: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+
 }))
 
-const Post = () => {
+const Findpost = () => {
    let baseUrl;
    const [trend, setTrend] = useState([]);
    const [search,setSearch] =useState();
@@ -196,6 +230,24 @@ const Post = () => {
    const [selectComment,setSelectComment] = useState();
    const [name, setName] = useState();
 
+   //////////////////////////snackbar//////////////////////
+
+  const [openup, setOpenup] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClosed = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+
+   ///////////////////////////////////////////////////////
 
     const toggleCardContent = (result) => {
       
@@ -271,13 +323,16 @@ const Post = () => {
                 }
             }
     
-            const data = await axios.post(host+"/api/posts",
-            {text: values,
-              image: Details.image,
+            const data = await axios.post(host+"/api/posts/findpost",
+            {
               shows:Details.name
              },config);
-            
-            setChange(!change);
+             if(data.data.length == 0){
+                 handleClick();
+             }
+
+            console.log("search data "+ data.data)
+            setPostData(data.data)
             exampleInput.current.value = " "
            
             
@@ -286,9 +341,8 @@ const Post = () => {
         }
    }
 
-   useEffect(async(e) => {
-     getrequest();
-    let config = {
+    const getData = async()=>{
+              let config = {
         headers:{
             "content-Type":"application/json"
         }
@@ -300,12 +354,12 @@ const Post = () => {
                 "x-auth-token": localStorage.getItem("authToken")
             }
         }
-        const data = await axios.get(host+"/api/posts",config);
+
         const auth = await axios.get(host+"/api/auth",config);
         
 
-        console.log(data)
-        if(data.data){
+        if(auth){
+            const data = await axios.get(host+"/api/posts",config);
             setName(auth.data.name);
             setPostData(data.data)
         }
@@ -314,6 +368,10 @@ const Post = () => {
      
         history.push('/login')
     }
+    }
+   useEffect(async(e) => {
+     getrequest();
+     getData();
   
    },[change,search])
     
@@ -329,6 +387,8 @@ const Post = () => {
     const onComments = (e)=>{
         Comment = e.target.value
     }
+
+
    let count = 0;
    //////////////////////////////////////////////////////////////////////
   const [open, setOpen] = React.useState(false);
@@ -341,6 +401,7 @@ const Post = () => {
 
   const handleClose = () => {
     setOpen(false);
+
   };
 
   const descriptionElementRef = React.useRef(null);
@@ -415,6 +476,29 @@ const Post = () => {
 
          }
 
+         const deletePost = async(id)=>{
+                try {
+        
+        const config = {
+            headers:{
+                "content-Type":"application/json",
+                "x-auth-token": localStorage.getItem("authToken")
+            }
+        }
+            
+            let data = await axios.delete(host+"/api/posts/"+[id],config);
+            if(data.data){
+             getData();
+            }
+            
+            } catch(error) {
+
+            const err = error.response.data
+
+            
+             }
+         }
+
 
 
 
@@ -436,7 +520,7 @@ const Post = () => {
   const card = (
 
        (Details.length == 0)?
-           (<Card onClick={handleClickOpen('paper')}>
+           (<Card className={classes.preview} onClick={handleClickOpen('paper')}>
       <CardActionArea>
         
         <CardMedia
@@ -451,7 +535,7 @@ const Post = () => {
       </CardActionArea>
 
     </Card>):(
-      <Card onClick={handleClickOpen('paper')}>
+      <Card className={classes.preview} onClick={handleClickOpen('paper')}>
       <CardActionArea>
         
         <CardMedia
@@ -548,33 +632,22 @@ const Post = () => {
     
         <form  noValidate autoComplete="off" onSubmit={handleSubmit}>
           <div className={classes.postMargin}>
-          <TextField
-          id="outlined-multiline-static"
-          label="What's on your mind?"
-          multiline
-          fullWidth
-          rows={6}
-          inputRef={exampleInput}   
-          onChange={(e)=> onChange(e)}
-          variant="outlined"
-          
-        />
           </div>
           <div className={classes.Button} >
-        <Button variant="contained" color="primary" type="submit" onClick={(e)=> makePost(e)} >
-          Post
+        <Button className={classes.buttonwidth}  variant="contained" color="primary" type="submit" onClick={(e)=> makePost(e)} >
+          Search Now
         </Button>
          </div>
         </form>
        
         
-       <Grid container spacing={2}>
+        <Grid container spacing={2}>
            {postData.slice().reverse().map(result => {
                return ( 
             <Grid key={result._id} item md={12} xs={12} sm={6}>
                 <Card className={classes.container}>
                    <CardActionArea>                      
-                     <CardContent >
+                     <CardContent>
                   <div className={classes.time}>
                        <div >
                             <h5 className={classes.exatTime}>{moment(result.date).fromNow()}</h5>
@@ -629,7 +702,6 @@ const Post = () => {
                                 <ListItem alignItems="flex-start">
                                   <ListItemAvatar>
                                     <Avatar className={classes.purple} alt={comments.name} src="/static/images/avatar/1.jpg" />
-            
                                   </ListItemAvatar>
                                   <ListItemText
                                     primary={ 
@@ -704,9 +776,17 @@ const Post = () => {
             </Grid>)
            })}
        </Grid>
-        {console.log(count)}
+            <div className={classes.rootup}>
+
+      <Snackbar open={openup} autoHideDuration={6000} onClose={handleClosed}>
+        <Alert onClose={handleClose} severity="error">
+          No Post Found
+        </Alert>
+      </Snackbar>
+      
+    </div>
        </>
    )
 };
 
-export default Post;
+export default Findpost;

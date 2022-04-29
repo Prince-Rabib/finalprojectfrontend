@@ -7,7 +7,7 @@ import Rightbar from "../components/Rightbar";
 import { Link } from "react-router-dom";
 import Searchtmdb from "../components/search/Searchtmdb";
 import Dbsearch from "../components/search/Dbsearch";
-
+import Toprattedmovie from "../components/toprattedmovie"
 const useStyles = makeStyles((theme) =>({
       right:{
           [theme.breakpoints.down("sm")]:{
@@ -37,7 +37,7 @@ const Search = () => {
               <Dbsearch/>
            </Grid>
            <Grid item sm={3} className={classes.right}>
-            <Rightbar/>  
+            <Toprattedmovie/>  
            </Grid>
         </Grid>
         <Add/>

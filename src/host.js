@@ -1,1 +1,1 @@
-export const host = "https://showbackend.herokuapp.com";
+export const host = "https://finalprojectbackend.vercel.app";

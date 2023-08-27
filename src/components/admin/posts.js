@@ -13,6 +13,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import {host} from '../../host';
 
 function Alert(props) {
@@ -62,12 +68,8 @@ const Posts =()=>{
      const [date,setdate] = useState("");    
      const [mechanic, setmechanic] = useState("");
      const [rows,Setrows]= useState([]);
-     const [open,setOpen] =useState({
-        status:false,
-        message: " ",
 
-     })
-
+     
 
 
         const history = useHistory();
@@ -77,12 +79,6 @@ const Posts =()=>{
               history.push('/'+result)
 
         }
-      const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }    
-        setOpen(false);
-      };
 
       function createData(name, calories, fat, carbs, protein) {
       return { name, calories, fat, carbs, protein };
@@ -137,52 +133,31 @@ const Posts =()=>{
 
     }
     const classes = useStyles();
+    
+    const [deletepost,Setdeletepost]= useState([]);
+  
+    const [open, setOpen] = React.useState(false);
 
+    const handleClickOpen = (id) => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      console.log("delete id " + deletepost);
+      deleteid(deletepost);
+      setOpen(false);
+    };
 
+    const ignore = () => {
+     setOpen(false);
+    }
+    const dialogueBox = (id) => {
+       Setdeletepost(id)
+       handleClickOpen();
 
-        const loginHandler = async(value,valueDate)=>{
-          
-        
-         let setupDate = date
-         if(!date){
-             setupDate = valueDate;
-         }
-        
-        try {
+    }
 
-            let data = await axios.post(host+"/api/posts",{                
-                "mechanic":mechanic,
-                "date":setupDate,
-                "id":value
-                
-              });
-              if(data){
-              setOpen({
-               
-                status:true,
-                message: "Changed Updated",
-                severity: "success",
-                
-              })
-              
-            }
-           
-            
-
-            } catch(error) {
-
-            console.log(error.message);
-            
-            setOpen({
-               
-                status:true,
-                message: "Mechanic is not available at this date",
-                severity: "error",
-                
-            })
-            
-      }
-   }
+   
 
     return(
       <>
@@ -215,7 +190,7 @@ const Posts =()=>{
                              <TableCell align="center"><img src={"https://image.tmdb.org/t/p/original"+row.image} style={{width:400}} alt={row.shows} /></TableCell>
                              <TableCell align="center">{row.likes.length}</TableCell>
                              <TableCell align="center">{row.comments.length}</TableCell>      
-                             <TableCell align="center"><Button variant="contained" color="secondary"onClick={()=> deleteid(row._id)}>Delete</Button></TableCell>                       
+                             <TableCell align="center"><Button variant="contained" color="secondary" onClick={()=> dialogueBox(row._id)}>Delete</Button></TableCell>                       
                             
                           </TableRow>
                         ))}
@@ -234,6 +209,28 @@ const Posts =()=>{
             </Snackbar>  
                 
      </div>
+     <div>
+      
+  
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Do you want to delete post ?"}</DialogTitle>
+        <DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" color="secondary" autoFocus>
+            Delete
+          </Button>
+          <Button onClick={ignore} variant="contained" color="primary" autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
         </>
     )
 }

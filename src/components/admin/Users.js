@@ -14,6 +14,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import {host} from '../../host';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -62,11 +67,7 @@ const Users =()=>{
      const [date,setdate] = useState("");    
      const [mechanic, setmechanic] = useState("");
      const [rows,Setrows]= useState([]);
-     const [open,setOpen] =useState({
-        status:false,
-        message: " ",
 
-     })
 
 
 
@@ -77,12 +78,7 @@ const Users =()=>{
               history.push('/'+result)
 
         }
-      const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }    
-        setOpen(false);
-      };
+
 
       function createData(name, calories, fat, carbs, protein) {
       return { name, calories, fat, carbs, protein };
@@ -116,6 +112,28 @@ const Users =()=>{
 
     }
     const classes = useStyles();
+    const [deletepost,Setdeletepost]= useState([]);
+  
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = (id) => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      console.log("delete id " + deletepost);
+      deleteid(deletepost);
+      setOpen(false);
+    };
+
+    const ignore = () => {
+     setOpen(false);
+    }
+    const dialogueBox = (id) => {
+       Setdeletepost(id)
+       handleClickOpen();
+
+    }
 
      
 
@@ -146,7 +164,7 @@ const Users =()=>{
                             <TableCell align="center">{row.email}</TableCell>
                              <TableCell align="center">{row.date.slice(0,10)}</TableCell>
                              {(row.email == "admin@gmail.com")? <TableCell align="center"><Button variant="contained" color="Primary">Admin</Button></TableCell>
-                             :<TableCell align="center"><Button variant="contained" color="secondary"onClick={()=> deleteid(row._id)}>Delete</Button></TableCell>}  
+                             :<TableCell align="center"><Button variant="contained" color="secondary"onClick={()=> dialogueBox(row._id)}>Delete</Button></TableCell>}  
                                  
                             
                           </TableRow>
@@ -166,6 +184,28 @@ const Users =()=>{
             </Snackbar>  
                 
      </div>
+     <div>
+      
+  
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Do you want to delete this user ?"}</DialogTitle>
+        <DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" color="secondary" autoFocus>
+            Delete
+          </Button>
+          <Button onClick={ignore} variant="contained" color="primary" autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
         </>
     )
 }
